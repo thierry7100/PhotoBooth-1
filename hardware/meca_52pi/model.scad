@@ -80,38 +80,34 @@ module support() {
 
 module camera_boule() {
 	difference() {
-		translate ([0, 0,  5]) sphere(d=14); // shpere
+		translate ([0, 0,  5]) sphere(d=15); // shpere
 		translate ([0, 0, -2]) cube ([14, 14, 4], center=true); // coupe le dessous
-		translate ([0, 0,  9]) cube ([5, 5, 6], center=true); // ajoute un trou pour le pilier
+		translate ([0, 0,  10]) cube ([5.5, 5.5, 6], center=true); // ajoute un trou pour le pilier
 	}
 }//camera_boule()
 
 module camera_support() {
-	translate ([0, 0, 5]) {
-		difference(){
-			union() {
-				difference() {
-					cube ([2+25+2+1, 2+24+1, 2+5+2+1], center=true); // boitier ppal
-					translate ([1, 0, 0]) cube ([25+1+2, 24+1, 5+1+1 ], center=true); // trou ppal
-					translate ([3.5, 0, -4]) cube ([23, 9, 2], center=true); // trou objectif
-					translate ([8, -6, -4]) cube ([14.5, 3, 2], center=true); // trou composant
-				}
-				// liaison pilier
-				hull() {
-					translate([-16, 0, 0]) cube ([2, 2+24+1, 2+5+2+1], center=true);
-					translate([-19, 0, 2.5]) cube ([2, 5, 5], center=true);
-				}
-			}
-			translate ([-15, 0, -2.5]) cube ([10, 23, 2], center=true); // trou nappe
+		difference() {
+			cube ([24, 25, 3]); // facade ppal
+			translate ([10, 8, 0]) cube ([9, 9, 3]); // trou objectif
+			// trous fixation
+			translate ([2, 2, 0]) cylinder (d=2.3, h=3);
+			translate ([2, 23, 0]) cylinder (d=2.3, h=3);
+			translate ([14.5, 2, 0]) cylinder (d=2.3, h=3);
+			translate ([14.5, 23, 0]) cylinder (d=2.3, h=3);
+		}
+		// liaison pilier
+		hull() {
+			translate([24, 0, 0]) cube ([2, 25, 5]);
+			translate([26, 10, 0]) cube ([2, 5, 5]);
 		}
 		// pilier
-		translate([-27, 0, 2.5]) cube ([14, 5, 5], center=true);
-	}
+		translate([28, 10, 0]) cube ([14, 5, 5]);
 }// camera support()
 
 // module camera pour impression
 module camera() {
-	translate ([0, 30, 0]) camera_boule();
+	translate ([0, 40, 0]) camera_boule();
 	camera_support();
 } //camera()
 
@@ -126,6 +122,6 @@ if (PARTNO == 0) {
  	translate ([112,0,0]) rotate([90,0,90]) pied();
 	translate ([0, 23.5, 8]) rotate([90-15,0,0]) support();
 	translate ([59.5, 45, 89]) barre();
-	translate ([79.5, 37.5, 140]) rotate([0, -90, -90]) camera_support();
+	translate ([92, 42.5, 146]) rotate([0, 90, 90]) camera_support();
 	translate ([79.5, 45, 103]) camera_boule();
 }

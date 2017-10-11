@@ -12,6 +12,7 @@ svg2dxf support.svg
 openscad -DPARTNO=1 -o pied.stl model.scad
 openscad -DPARTNO=2 -o barre.stl model.scad
 openscad -DPARTNO=3 -o support.stl model.scad
+openscad -DPARTNO=4 -o camera.stl model.scad
 
 # export image of all the parts combined
 openscad -DPARTNO=0 -o model.png model.scad
