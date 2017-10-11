@@ -1,6 +1,6 @@
 /* support pour picamera v2 & écran 7'' 52pi */
 
-PARTNO = 0; // default part number
+PARTNO = 2; // default part number
 
 
 module pied() {
@@ -42,11 +42,13 @@ module barre() {
 		difference() {
 			// supports cotés boule
 			for (i=[-1:2:1]) {
-				translate ([i*9,0,10+h_barre])
-					rotate ([0,90,0])
-						cylinder (d=15, h=6, center=true);
-				translate ([i*9,0,5+h_barre])
-					cube([6,15,10], center=true);
+				hull() {
+					translate ([i*7.5,0,10+h_barre])
+						rotate ([0,90,0])
+							cylinder (d=15, h=3, center=true);
+					translate ([i*9,0,h_barre])
+						cube([6,15,2], center=true);
+				}
 			}
 			//boule a enlever
 			translate ([0,0,12+h_barre])
