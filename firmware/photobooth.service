@@ -1,0 +1,17 @@
+[Unit]
+Description=Photobooth service
+After=multi-user.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/photobooth/
+ExecStart=/home/pi/photobooth/camera_btn.py
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
+
+
