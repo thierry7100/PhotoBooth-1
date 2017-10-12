@@ -10,6 +10,7 @@ camera = PiCamera()
 
 camera.resolution = (2592, 1944)
 camera.annotate_text_size = 160
+camera.hflip = True
 
 camera.start_preview()
 
