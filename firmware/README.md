@@ -11,3 +11,7 @@ Install Photobooth service
  sudo systemctl daemon-reload
  sudo systemctl enable photobooth.service
  sudo systemctl start photobooth.service
+
+ add to /boot/config.txt
+  # enable uart for "power" led
+  enable_uart=1
