@@ -2,10 +2,12 @@
 
 from picamera import PiCamera
 from time import *
-from gpiozero import Button
+from gpiozero import Button, LED, PWMLED
 from PIL import Image
 
+
 button = Button(17)
+led = PWMLED(18)
 camera = PiCamera()
 
 camera.resolution = (2592, 1944)
@@ -45,23 +47,32 @@ while True:
 		#o.alpha = 128
 		o.layer = 3
 
+		led.pulse()
 		button.wait_for_press()
 
 		camera.remove_overlay(o)
 
+		led.blink (on_time=0.125, off_time=0.125, n=12, background=True)
+
 		for i in range(2, -1, -1):
+			#led.value = 0
 			o = camera.add_overlay(waits[i].tobytes(), format='rgba', layer=3)
 			sleep(1)
+			nblink = 3-i
+			#print (nblink, ", ", 1.0/(2**nblink))
+			#led.blink (on_time=1.0/(2**nblink), off_time=1.0/(2**nblink), n=nblink, background=False)
 			camera.remove_overlay(o)
-			sleep(1)
-		outfile = '/home/pi/%s.jpg' % ( strftime("%Y%m%d-%H%M%S", localtime() ) )
+		outfile = '/home/pi/Pictures/%s.jpg' % ( strftime("%Y%m%d-%H%M%S", localtime() ) )
+		led.value = 1
 		camera.capture( outfile )
 		#print outfile
 
 		outover = getImg (outfile)
+		led.value = 0
 		o = camera.add_overlay(outover.tobytes(), format='rgba', layer=3)
 		#camera.annotate_text = 'Voici votre Photo ...\nMerci'
 		sleep(5)
+		#camera.annotate_text = ''
 		camera.remove_overlay(o)
 		#camera.annotate_text = ""
 	except KeyboardInterrupt:
