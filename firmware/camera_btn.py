@@ -31,6 +31,7 @@ def getImg (fname):
 	return pad
 
 acc = getImg ("Accueil.png")
+merci = getImg ("Merci.png")
 waits = []
 for i in range(3):
 	waits.append(getImg ("%d.png" % (i+1)))
@@ -47,12 +48,12 @@ while True:
 		#o.alpha = 128
 		o.layer = 3
 
-		led.pulse()
+		led.pulse(2,2)
 		button.wait_for_press()
 
 		camera.remove_overlay(o)
 
-		led.blink (on_time=0.125, off_time=0.125, n=12, background=True)
+		led.blink (on_time=0.125, off_time=0.125, n=16, background=True)
 
 		for i in range(2, -1, -1):
 			#led.value = 0
@@ -67,8 +68,11 @@ while True:
 		camera.capture( outfile )
 		#print outfile
 
-		outover = getImg (outfile)
 		led.value = 0
+		o = camera.add_overlay(merci.tobytes(), format='rgba', layer=3)
+		sleep(2)
+		outover = getImg (outfile)
+		camera.remove_overlay(o)
 		o = camera.add_overlay(outover.tobytes(), format='rgba', layer=3)
 		#camera.annotate_text = 'Voici votre Photo ...\nMerci'
 		sleep(5)
