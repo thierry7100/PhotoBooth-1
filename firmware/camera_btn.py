@@ -1,9 +1,26 @@
 #!/usr/bin/python
 
+from __future__ import print_function
+import httplib2
+import os
+
 from picamera import PiCamera
 from time import *
 from gpiozero import Button, LED, PWMLED
 from PIL import Image
+
+from apiclient import discovery
+from oauth2client import client
+from oauth2client import tools
+from oauth2client.file import Storage
+from apiclient.http import MediaFileUpload
+from apiclient.discovery import build
+
+# If modifying these scopes, delete your previously saved credentials
+# at ~/.credentials/drive-python-quickstart.json
+SCOPES = 'https://www.googleapis.com/auth/drive.file'
+CLIENT_SECRET_FILE = 'client_id.json'
+APPLICATION_NAME = 'Drive API Python Quickstart'
 
 
 button = Button(17)
@@ -15,7 +32,73 @@ camera.resolution = (2592, 1944)
 camera.annotate_text_size = 160
 camera.hflip = True
 
-camera.start_preview()
+def get_credentials():
+	"""Gets valid user credentials from storage.
+
+	If nothing has been stored, or if the stored credentials are invalid,
+	the OAuth2 flow is completed to obtain the new credentials.
+
+	Returns:
+		Credentials, the obtained credential.
+	"""
+	home_dir = os.path.expanduser('~')
+	credential_dir = os.path.join(home_dir, '.credentials')
+	if not os.path.exists(credential_dir):
+		os.makedirs(credential_dir)
+	credential_path = os.path.join(credential_dir,
+											'drive_photobooth.json')
+
+	store = Storage(credential_path)
+	credentials = store.get()
+	if not credentials or credentials.invalid:
+		flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
+		flow.user_agent = APPLICATION_NAME
+		if flags:
+			credentials = tools.run_flow(flow, store, flags)
+		else: # Needed only for compatibility with Python 2.6
+			credentials = tools.run(flow, store)
+		print('Storing credentials to ' + credential_path)
+	return credentials
+
+def uploadToDrive (fname):
+	credentials = get_credentials()
+	http = credentials.authorize(httplib2.Http())
+	service = discovery.build('drive', 'v3', http=http)
+
+	results = service.files().list(
+		pageSize=10,fields="nextPageToken, files(id, name)").execute()
+	items = results.get('files', [])
+	if not items:
+		print('No files found.')
+	else:
+		print('Files:')
+		folder_id = None;
+		for item in items:
+			print('{0} ({1})'.format(item['name'], item['id']))
+			if item['name'] == "PhotoBooth":
+				folder_id = item['id']
+		if not folder_id:
+			# create dir
+			file_metadata = {
+				'name': 'PhotoBooth',
+				'mimeType': 'application/vnd.google-apps.folder'
+			}
+			file = service.files().create(body=file_metadata,
+															fields='id').execute()
+			print ('Folder ID: %s' % file.get('id'))
+			folder_id = file.get('id')
+		# upload file
+		file_metadata = {
+			'name': os.path.basename(fname),
+			'parents': [folder_id]
+		}
+		media = MediaFileUpload(fname,
+										mimetype='image/jpeg',
+										resumable=True)
+		file = service.files().create(body=file_metadata,
+														media_body=media,
+														fields='id').execute()
+		print ("File ID: %s" % (file.get('id')))
 
 def getImg (fname):
 	# Load the arbitrarily sized image
@@ -37,6 +120,7 @@ waits = []
 for i in range(3):
 	waits.append(getImg ("%d.png" % (i+1)))
 
+camera.start_preview()
 while True:
 	try:
 		# Add the overlay with the padded image as the source,
@@ -82,9 +166,8 @@ while True:
 		o = camera.add_overlay(outover.tobytes(), format='rgba', layer=3)
 		#camera.annotate_text = 'Voici votre Photo ...\nMerci'
 		sleep(4)
-		#camera.annotate_text = ''
 		camera.remove_overlay(o)
-		#camera.annotate_text = ""
+		uploadToDrive ( outfile );
 	except KeyboardInterrupt:
 		camera.stop_preview()
 		break
