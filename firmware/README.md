@@ -15,3 +15,8 @@ Install Photobooth service
  add to /boot/config.txt
   # enable uart for "power" led
   enable_uart=1
+
+Install needed python modules
+ pip install --upgrade google-api-python-client
+get api ID clients OAuth 2.0 client_id.json and put in here
+see https://console.developers.google.com/apis/credentials
