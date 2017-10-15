@@ -10,6 +10,7 @@ WorkingDirectory=/home/pi/photobooth/
 ExecStart=/home/pi/photobooth/camera_btn.py
 StandardOutput=syslog
 StandardError=syslog
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
