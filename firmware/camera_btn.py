@@ -8,6 +8,7 @@ from PIL import Image
 
 button = Button(17)
 led = PWMLED(18)
+led2 = PWMLED(12)
 camera = PiCamera()
 
 camera.resolution = (2592, 1944)
@@ -53,7 +54,10 @@ while True:
 
 		camera.remove_overlay(o)
 
-		led.blink (on_time=0.125, off_time=0.125, n=16, background=True)
+		#led.blink (on_time=0.125, off_time=0.125, n=16, background=True)
+		#led2.blink (on_time=0.125, off_time=0.125, n=16, background=True)
+		led2.pulse (fade_in_time=0.125, fade_out_time=0.125, n=16, background=True)
+		led.pulse (fade_in_time=0.125, fade_out_time=0.125, n=16, background=True)
 
 		for i in range(2, -1, -1):
 			#led.value = 0
@@ -65,17 +69,19 @@ while True:
 			camera.remove_overlay(o)
 		outfile = '/home/pi/Pictures/%s.jpg' % ( strftime("%Y%m%d-%H%M%S", localtime() ) )
 		led.value = 1
+		led2.value = 1
 		camera.capture( outfile )
 		#print outfile
 
 		led.value = 0
+		led2.value = 0
 		o = camera.add_overlay(merci.tobytes(), format='rgba', layer=3)
 		sleep(2)
 		outover = getImg (outfile)
 		camera.remove_overlay(o)
 		o = camera.add_overlay(outover.tobytes(), format='rgba', layer=3)
 		#camera.annotate_text = 'Voici votre Photo ...\nMerci'
-		sleep(5)
+		sleep(4)
 		#camera.annotate_text = ''
 		camera.remove_overlay(o)
 		#camera.annotate_text = ""
