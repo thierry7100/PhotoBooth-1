@@ -17,10 +17,10 @@ from apiclient.http import MediaFileUpload
 from apiclient.discovery import build
 
 # If modifying these scopes, delete your previously saved credentials
-# at ~/.credentials/drive-python-quickstart.json
+# at ~/.credentials/drive_photobooth.json
 SCOPES = 'https://www.googleapis.com/auth/drive.file'
 CLIENT_SECRET_FILE = 'client_id.json'
-APPLICATION_NAME = 'Drive API Python Quickstart'
+APPLICATION_NAME = 'PhotoBooth'
 
 
 button = Button(17)
