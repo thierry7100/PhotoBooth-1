@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 import httplib2
-import os
+import os, sys
 
 from picamera import PiCamera
 from time import *
@@ -167,7 +167,10 @@ while True:
 		#camera.annotate_text = 'Voici votre Photo ...\nMerci'
 		sleep(4)
 		camera.remove_overlay(o)
-		uploadToDrive ( outfile );
+		try:
+			uploadToDrive ( outfile );
+		except:
+			print ("cannot upload picture %s to drive. (%s)" % (outfile, sys.exc_info()[0]) , file=sys.stderr)
 	except KeyboardInterrupt:
 		camera.stop_preview()
 		break
