@@ -1,6 +1,6 @@
 /* support pour picamera v2 & écran 7'' 52pi */
 
-PARTNO = 0; // default part number
+PARTNO = 4; // default part number
 
 $fn=100;
 
