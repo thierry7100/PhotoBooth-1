@@ -5,7 +5,7 @@
 
 
 from gpiozero import Button
-from subprocess import check_call, CalledProcessError
+from subprocess import check_call, CalledProcessError, STDOUT
 from signal import pause
 import os
 
@@ -19,7 +19,7 @@ def shutdown():
 def stop_start():
 	#print ("btn released")
 	try:
-		check_call(['systemctl', 'status', 'photobooth.service'], stdout=FNULL, stderr=subprocess.STDOUT)
+		check_call(['systemctl', 'status', 'photobooth.service'], stdout=FNULL, stderr=STDOUT)
 		# no error, service is running, stop it
 		#print("Stopping photobooth")
 		check_call(['systemctl', 'stop', 'photobooth.service'])
