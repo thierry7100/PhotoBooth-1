@@ -27,6 +27,7 @@ button = Button(17)
 led = PWMLED(18)
 led2 = PWMLED(12)
 camera = PiCamera()
+ledStrip = LED(22)
 
 camera.resolution = (2592, 1944)
 camera.annotate_text_size = 160
@@ -138,6 +139,8 @@ while True:
 
 		camera.remove_overlay(o)
 
+		ledStrip.on()
+
 		#led.blink (on_time=0.125, off_time=0.125, n=16, background=True)
 		#led2.blink (on_time=0.125, off_time=0.125, n=16, background=True)
 		led2.pulse (fade_in_time=0.125, fade_out_time=0.125, n=16, background=True)
@@ -157,6 +160,7 @@ while True:
 		camera.capture( outfile )
 		#print outfile
 
+		ledStrip.off()
 		led.value = 0
 		led2.value = 0
 		o = camera.add_overlay(merci.tobytes(), format='rgba', layer=3)
