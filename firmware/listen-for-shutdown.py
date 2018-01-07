@@ -19,7 +19,7 @@ def shutdown():
 def stop_start():
 	#print ("btn released")
 	try:
-		check_call(['systemctl', 'status', 'photobooth.service'], stdout=FNULL, stderr=STDOUT)
+		check_call(['systemctl', 'status', 'photobooth.service'])
 		# no error, service is running, stop it
 		#print("Stopping photobooth")
 		check_call(['systemctl', 'stop', 'photobooth.service'])
