@@ -1,6 +1,6 @@
 /* support pour picamera v2 & écran 7'' 52pi */
 
-PARTNO = 4; // default part number
+PARTNO = 0; // default part number
 
 $fn=100;
 
@@ -114,7 +114,8 @@ module camera() {
 if (PARTNO == 1) pied();
 if (PARTNO == 2) barre();
 if (PARTNO == 3) support();
-if (PARTNO == 4) camera();
+if (PARTNO == 4) camera_boule();
+if (PARTNO == 5) camera_support();
 
 // optionally use 0 for whole object, in place for viewing
 if (PARTNO == 0) {
