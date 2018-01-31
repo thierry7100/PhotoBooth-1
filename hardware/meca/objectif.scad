@@ -4,7 +4,7 @@ $fn=100;
 module facade() {
 	difference() {
 		cylinder (d=70, h=3); // facade
-		translate ([0, 0, -1]) cylinder (d=10, h=5); // trou objectif
+		translate ([0, 0, -1]) cylinder (d=12.5, h=5); // trou objectif
 		// trous fixation
 		translate ([-12.5, -10.5, -1]) cylinder (d=2.3, h=3.5);
 		translate ([-12.5, 10.5, -1]) cylinder (d=2.3, h=3.5);
@@ -32,7 +32,7 @@ module bague() {
 
 // trous de fixation
 module fixations() {
-	for (i = [0:360/3:360] ) {
+	for (i = [0:360/4:360] ) {
 		rotate (a = [0,0,i]) translate ([-25,0,-1]) cylinder (d=4, h=5);
 	}
 }
