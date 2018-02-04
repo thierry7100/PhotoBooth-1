@@ -32,7 +32,8 @@ ledStrip = LED(22)
 camera.resolution = (2592, 1944)
 camera.annotate_text_size = 160
 camera.hflip = True # horizontal flip to see as in a mirror
-camera.vflip = True # vertical flip if screen is upside down
+# this is not Needed, just add display_rotate=2 or lcd_rotate=2 in /boot/config.txt
+camera.vflip = False # vertical flip if screen is upside down
 
 def get_credentials():
 	"""Gets valid user credentials from storage.
