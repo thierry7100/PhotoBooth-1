@@ -31,7 +31,8 @@ ledStrip = LED(22)
 
 camera.resolution = (2592, 1944)
 camera.annotate_text_size = 160
-camera.hflip = True
+camera.hflip = True # horizontal flip to see as in a mirror
+camera.vflip = True # vertical flip if screen is upside down
 
 def get_credentials():
 	"""Gets valid user credentials from storage.
@@ -126,7 +127,7 @@ while True:
 	try:
 		# Add the overlay with the padded image as the source,
 		# but the original image's dimensions
-		o = camera.add_overlay(acc.tobytes(), format='rgba')
+		o = camera.add_overlay(acc.tobytes(), format='rgba', vflip=camera.vflip, hflip=camera.hflip)
 		# By default, the overlay is in layer 0, beneath the
 		# preview (which defaults to layer 2). Here we make
 		# the new overlay semi-transparent, then move it above
@@ -143,17 +144,20 @@ while True:
 
 		#led.blink (on_time=0.125, off_time=0.125, n=16, background=True)
 		#led2.blink (on_time=0.125, off_time=0.125, n=16, background=True)
+		# blink leds to show waiting time
 		led2.pulse (fade_in_time=0.125, fade_out_time=0.125, n=16, background=True)
 		led.pulse (fade_in_time=0.125, fade_out_time=0.125, n=16, background=True)
 
+		# show countdown on top of camera
 		for i in range(2, -1, -1):
 			#led.value = 0
-			o = camera.add_overlay(waits[i].tobytes(), format='rgba', layer=3)
+			o = camera.add_overlay(waits[i].tobytes(), format='rgba', layer=3, vflip=camera.vflip, hflip=camera.hflip)
 			sleep(1)
 			nblink = 3-i
 			#print (nblink, ", ", 1.0/(2**nblink))
 			#led.blink (on_time=1.0/(2**nblink), off_time=1.0/(2**nblink), n=nblink, background=False)
 			camera.remove_overlay(o)
+		# capture still image from camera
 		outfile = '/home/pi/Pictures/%s.jpg' % ( strftime("%Y%m%d-%H%M%S", localtime() ) )
 		led.value = 1
 		led2.value = 1
@@ -163,14 +167,17 @@ while True:
 		ledStrip.off()
 		led.value = 0
 		led2.value = 0
-		o = camera.add_overlay(merci.tobytes(), format='rgba', layer=3)
+		# show thank you, here's your picture
+		o = camera.add_overlay(merci.tobytes(), format='rgba', layer=3, vflip=camera.vflip, hflip=camera.hflip)
 		sleep(2)
+		# show captured picture
 		outover = getImg (outfile)
 		camera.remove_overlay(o)
 		o = camera.add_overlay(outover.tobytes(), format='rgba', layer=3)
 		#camera.annotate_text = 'Voici votre Photo ...\nMerci'
 		sleep(4)
 		camera.remove_overlay(o)
+		# upload picture to google drive
 		try:
 			uploadToDrive ( outfile );
 		except:
