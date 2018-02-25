@@ -15,6 +15,7 @@ from oauth2client import tools
 from oauth2client.file import Storage
 from apiclient.http import MediaFileUpload
 from apiclient.discovery import build
+from threading import Thread
 
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/drive_photobooth.json
@@ -88,7 +89,7 @@ def uploadToDrive (fname):
 			}
 			file = service.files().create(body=file_metadata,
 															fields='id').execute()
-			print ('Folder ID: %s' % file.get('id'))
+			print ('Created Folder ID: %s' % file.get('id'))
 			folder_id = file.get('id')
 		# upload file
 		file_metadata = {
@@ -101,7 +102,7 @@ def uploadToDrive (fname):
 		file = service.files().create(body=file_metadata,
 														media_body=media,
 														fields='id').execute()
-		print ("File ID: %s" % (file.get('id')))
+		print ("Created File : %s (%s)" % (file.get('name'), file.get('id')))
 
 def getImg (fname):
 	# Load the arbitrarily sized image
@@ -117,6 +118,17 @@ def getImg (fname):
 	pad.paste(img, (0, 0))
 	return pad
 
+class thUpload(Thread):
+	def __init__(self, fname):
+		Thread.__init__(self)
+		self.fname = fname
+	def run (self):
+		try:
+			uploadToDrive ( self.fname )
+		except:
+			print ("cannot upload picture %s to drive. (%s)" % (outfile, sys.exc_info()[0]) , file=sys.stderr)
+
+
 acc = getImg ("Accueil.png")
 merci = getImg ("Merci.png")
 waits = []
@@ -128,7 +140,8 @@ while True:
 	try:
 		# Add the overlay with the padded image as the source,
 		# but the original image's dimensions
-		o = camera.add_overlay(acc.tobytes(), format='rgba', vflip=camera.vflip, hflip=camera.hflip)
+		# note: we need to hflip the overlay only if vfliped
+		o = camera.add_overlay(acc.tobytes(), format='rgba', vflip=camera.vflip, hflip=camera.vflip)
 		# By default, the overlay is in layer 0, beneath the
 		# preview (which defaults to layer 2). Here we make
 		# the new overlay semi-transparent, then move it above
@@ -152,7 +165,7 @@ while True:
 		# show countdown on top of camera
 		for i in range(2, -1, -1):
 			#led.value = 0
-			o = camera.add_overlay(waits[i].tobytes(), format='rgba', layer=3, vflip=camera.vflip, hflip=camera.hflip)
+			o = camera.add_overlay(waits[i].tobytes(), format='rgba', layer=3, vflip=camera.vflip, hflip=camera.vflip)
 			sleep(1)
 			nblink = 3-i
 			#print (nblink, ", ", 1.0/(2**nblink))
@@ -169,7 +182,7 @@ while True:
 		led.value = 0
 		led2.value = 0
 		# show thank you, here's your picture
-		o = camera.add_overlay(merci.tobytes(), format='rgba', layer=3, vflip=camera.vflip, hflip=camera.hflip)
+		o = camera.add_overlay(merci.tobytes(), format='rgba', layer=3, vflip=camera.vflip, hflip=camera.vflip)
 		sleep(2)
 		# show captured picture
 		outover = getImg (outfile)
@@ -179,10 +192,10 @@ while True:
 		sleep(4)
 		camera.remove_overlay(o)
 		# upload picture to google drive
-		try:
-			uploadToDrive ( outfile );
-		except:
-			print ("cannot upload picture %s to drive. (%s)" % (outfile, sys.exc_info()[0]) , file=sys.stderr)
+		th = thUpload (outfile)
+		th.start()
+		# th.join() # do not wait for uploading thread
+		print ("upload")
 	except KeyboardInterrupt:
 		camera.stop_preview()
 		break
