@@ -1,4 +1,13 @@
+## Software
+* camera_btn.py : PhotoBooth main daemon. handle taking picture and upload to google drive
+* listen-for-shutdown.py : management software :
+ * starting/stopping camera_btn.py (short press)
+ * powering off RPi (long press)
+* *.service : systemctl services definitions
+
 ## Install
+
+Based on [Raspbian](https://www.raspberrypi.org/downloads/raspbian/)
 
 Install shutdown service
 
@@ -25,7 +34,11 @@ Install needed python modules
 
 get api ID clients OAuth 2.0 client_id.json and put in current directory. See https://console.developers.google.com/apis/credentials
 
+## Customization
+There's some images displayed by the PhotoBooth service. They are overlayed on top of the live image.
+* Acceuil.png : displayed all when waiting for a "customer"
+* 3.png / 2.png / 1.png : countdown before picture shooting
+* Merci.png : displayed after shooting, before showing taken picture
+
 ## Todo
-* test sans réseau
-* thread séparé avec timeout pour upload ?
 * comment refaire les creds ?
