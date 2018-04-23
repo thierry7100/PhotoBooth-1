@@ -11,6 +11,13 @@ This is the schematic of the electronic part.
 
 ![scheme](elec/cablage_bb.png?raw=true "Scheme")
 
+* on/off : small button for software control
+* photo : big red button
+* activity/activity2 : led that will be pulsed (slow when waiting, fast during countdown)
+* power : power led
+* strip power : input power for a "flash" led strip
+* led strip : controled power output for the led strip
+
 ## meca
 Some 3D printed or laser cutted parts :
 * button_box : laser cutted box for the big red button

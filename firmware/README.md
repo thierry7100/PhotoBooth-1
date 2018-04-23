@@ -1,9 +1,9 @@
 ## Software
 * camera_btn.py : PhotoBooth main daemon. handle taking picture and upload to google drive
 * listen-for-shutdown.py : management software :
- * starting/stopping camera_btn.py (short press)
- * powering off RPi (long press)
-* *.service : systemctl services definitions
+  * starting/stopping camera_btn.py (short press)
+  * powering off RPi (long press)
+* *.service : systemctl services definition
 
 ## Install
 
