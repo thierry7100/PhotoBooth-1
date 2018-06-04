@@ -29,3 +29,17 @@ Bill Of material :
 * 1 arcade button for software control
 
 See readme in [subdir](hardware/) for details.
+
+## tips for post-treatment
+Picture are mirorred, to revert to normal :
+```
+mogrify -flop *.jpg
+```
+
+In case of bad date and so a bad name. (with no RTC on the pi)
+Let's say a picture is taken 22/03/2018 at 16:30, but dated 04/03/2018 at 17:48
+```
+jhead -da2018:03:22/16:30-2018:03:04/17:48 *.jpg
+jhead -ft *.jpg
+jhead -nf%Y%m%d-%H%M%S *.jpg
+```
