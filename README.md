@@ -35,6 +35,10 @@ Picture are mirorred, to revert to normal :
 ```
 mogrify -flop *.jpg
 ```
+If running windows, download ImageMagick for Windows then command is :
+```
+magick.exe mogrify -flop *.jpg
+```
 
 In case of bad date and so a bad name. (with no RTC on the pi)
 Let's say a picture is taken 22/03/2018 at 16:30, but dated 04/03/2018 at 17:48
