@@ -1,5 +1,5 @@
 ## Software
-* camera_btn.py : PhotoBooth main daemon. handle taking picture and upload to google drive
+* PhotoBooth_3Img_mariage.py : PhotoBooth main daemon. handle taking picture and upload to google drive
 * listen-for-shutdown.py : management software :
   * starting/stopping camera_btn.py (short press)
   * powering off RPi (long press)
@@ -23,11 +23,6 @@ Install Photobooth service
     sudo systemctl enable photobooth.service
     sudo systemctl start photobooth.service
 
-add to /boot/config.txt
-
-    # enable uart for "power" led
-    enable_uart=1
-
 Install needed python modules
 
     pip install --upgrade google-api-python-client
@@ -36,9 +31,5 @@ get api ID clients OAuth 2.0 client_id.json and put in current directory. See ht
 
 ## Customization
 There's some images displayed by the PhotoBooth service. They are overlayed on top of the live image.
-* Acceuil.png : displayed all when waiting for a "customer"
-* 3.png / 2.png / 1.png : countdown before picture shooting
-* Merci.png : displayed after shooting, before showing taken picture
+The documentation explains how to change these images
 
-## Todo
-* comment refaire les creds ?
